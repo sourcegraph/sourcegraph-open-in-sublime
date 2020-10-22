@@ -11,3 +11,5 @@ Adds a button at the top of files in both Sourcegraph app and code hosts like Gi
 ## Settings
 
 - `openInSublime.basePath`: The absolute path on your computer where your git repositories live. This extension requires all git repos to be already cloned under this path with their original names. `"/Users/yourusername/src"` is a valid absolute path, while `"~/src"` is not.
+
+Sublime Text requires a URL handler installed such as [this one for macOS](https://github.com/inopinatus/sublime_url).
