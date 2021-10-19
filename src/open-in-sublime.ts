@@ -3,10 +3,12 @@ import * as path from 'path'
 
 interface Settings {
     'openInSublime.basePath'?: string
+    'openInSublime.replacements'?: Record<string, string>
 }
 
 function getOpenUrl(textDocumentUri: URL): URL {
     const basePath = sourcegraph.configuration.get<Settings>().value['openInSublime.basePath']
+    const replacements = sourcegraph.configuration.get().value['openInSublime.replacements'] as Record<string, string>
     const learnMorePath = new URL('/extensions/sourcegraph/open-in-sublime', sourcegraph.internal.sourcegraphURL.href)
         .href
     const userSettingsPath = new URL('/user/settings', sourcegraph.internal.sourcegraphURL.href).href
@@ -26,20 +28,30 @@ function getOpenUrl(textDocumentUri: URL): URL {
     const repoBaseName = rawRepoName.split('/').pop() ?? ''
     const relativePath = decodeURIComponent(textDocumentUri.hash.slice('#'.length))
     const absolutePath = path.join(basePath, repoBaseName, relativePath)
-    const openUrl = new URL('subl://open?url=' + absolutePath)
+    let openUrl = 'subl://open?url=file://' + absolutePath;
 
     if (sourcegraph.app.activeWindow?.activeViewComponent?.type === 'CodeEditor') {
         const selection = sourcegraph.app.activeWindow?.activeViewComponent?.selection
         if (selection) {
-            openUrl.searchParams.set('line', (selection.start.line + 1).toString())
+            openUrl += `:${selection.start.line + 1}`
 
             if (selection && selection.start.character !== 0) {
-                openUrl.searchParams.set('column', (selection.start.character + 1).toString())
+                openUrl += `:${selection.start.character + 1}`
             }
         }
     }
 
-    return openUrl
+    // If configured, run replacements before returning final URL
+    if(replacements) {
+        for (const replacement in replacements) {
+            if (typeof replacement === 'string') {
+                const POST_REGEX = new RegExp(replacement);
+                openUrl = openUrl.replace(POST_REGEX, replacements[replacement])
+            }
+        }
+    }
+
+    return new URL(openUrl)
 }
 
 export function activate(context: sourcegraph.ExtensionContext): void {
