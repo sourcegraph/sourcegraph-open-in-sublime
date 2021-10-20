@@ -2,7 +2,7 @@
 
 Adds a button to the Sourcegraph's extension panel and at the top of files in code hosts like GitHub (when the Sourcegraph browser extension is installed) that will open the current file in Sublime Text.
 
-**This extension requires all git repos to be already cloned under the base path with their original names.**
+**This extension requires all git repos to be cloned and available on your local machine.**
 
 <picture>
 <source srcset="https://user-images.githubusercontent.com/37420160/96816775-e9760400-13eb-11eb-812f-85046bd4db6d.png" media="(prefers-color-scheme: dark)" />
@@ -16,6 +16,8 @@ Adds a button to the Sourcegraph's extension panel and at the top of files in co
 
 - `openInSublime.replacements`: [OPTIONAL] Set to an object that includes pairs of strings, where each key will be replaced by its value in the final url. The key can be a string or a RegExp, and the value must be a string. For example, using `"openInSublime.replacements": {"(?<=Documents\/)(.*[\\\/])": "sourcegraph-$1"}` will add `sourcegraph-` in front of the string that matches the `(?<=Documents\/)(.*[\\\/])` RegExp pattern, while `"openInSublime.replacements": {"sourcegraph-": ""}` will remove `sourcegraph-` from the final URL.
 
+- `openInSublime.osPaths`: [OPTIONAL] Object. The extension uses the assigned path for the detected Operating System when available. If no platform is detected then we will keep using the basePath provided with `openInSublime.basePath`. Currently support `"windows"`, `"mac"`, and `"linux"` as keys.
+
 Sublime Text requires a URL handler installed such as [this one for macOS](https://github.com/inopinatus/sublime_url).
 
 ## Examples
@@ -24,7 +26,7 @@ Sublime Text requires a URL handler installed such as [this one for macOS](https
 
 **Requires a URL handler installed such as [this one for macOS](https://github.com/inopinatus/sublime_url).**
 
-To open repository files in your Documents directory:
+Opens repository files in your Documents directory:
 
 ```json
 {
@@ -32,6 +34,27 @@ To open repository files in your Documents directory:
     "sourcegraph/open-in-sublime": true,
   },
   // where the cloned git repositories are located
+  "openInSublime.basePath": "/Users/USERNAME/Documents/"
+}
+```
+
+### Set basePath for multiple platforms
+
+**Requires a URL handler installed such as [this one for macOS](https://github.com/inopinatus/sublime_url).**
+
+Uses the assigned path for the detected Operating System when available:
+
+```json
+{
+  "extensions": {
+    "sourcegraph/open-in-sublime": true,
+  },
+  "openInSublime.osPaths": {
+    "windows": "/C:/Users/USERNAME/folder/",
+    "mac": "/Users/USERNAME/folder/",
+    "linux": "/home/USERNAME/folder/"
+  },
+  // set basePath as fallback path when no operation system is detected
   "openInSublime.basePath": "/Users/USERNAME/Documents/"
 }
 ```
