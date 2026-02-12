@@ -96,7 +96,7 @@
     "@types/node": "24.10.12",
     "eslint": "^10.0.0",
     "lnfs-cli": "^2.1.0",
-    "mkdirp": "^1.0.4",
+    "mkdirp": "^3.0.1",
     "parcel-bundler": "^1.12.4",
     "sourcegraph": "^25.7.0",
     "typescript": "^3.9.7"
