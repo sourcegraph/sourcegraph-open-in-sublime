@@ -97,7 +97,7 @@
     "eslint": "^10.0.0",
     "lnfs-cli": "^2.1.0",
     "mkdirp": "^1.0.4",
-    "parcel-bundler": "^1.12.4",
+    "parcel-bundler": "^1.12.5",
     "sourcegraph": "^25.7.0",
     "typescript": "^3.9.7"
   },
